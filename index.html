@@ -3,264 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Explore the lives and legacies of Nobel Prize winners at Prixe.tech. Interactive, advanced dashboard.">
-<title>Nobel Prize Explorer • Ultimate Edition</title>
-<link rel="icon" href="favicon.png" type="image/png">
-
+<title>ULTIMATE Nobel Explorer</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
-
-  :root {
-    --primary:#00acc1;
-    --secondary:#7b1fa2;
-    --background:#f0f8ff;
-    --card-bg:white;
-    --text-color:#333;
-    --dark-bg:#121212;
-    --dark-card:#1e1e1e;
-    --dark-text:#eee;
-  }
-
-  body {
-    margin:0;
-    font-family:'Raleway',sans-serif;
-    background:var(--background);
-    color:var(--text-color);
-    transition: background 0.3s, color 0.3s;
-  }
-
-  body.dark {
-    background: var(--dark-bg);
-    color: var(--dark-text);
-  }
-
-  header {
-    text-align:center;
-    padding:20px;
-    background: linear-gradient(90deg, #006064, #004d40);
-    color:white;
-    position: sticky;
-    top:0;
-    z-index: 10;
-  }
-
-  header h1 { margin:0; font-size:2em; }
-
-  .toggle-mode {
-    margin-top:10px;
-    cursor:pointer;
-    background: var(--secondary);
-    border:none;
-    color:white;
-    padding:5px 12px;
-    border-radius:8px;
-    font-weight:bold;
-  }
-
-  .container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap:20px;
-    margin:20px;
-  }
-
-  section {
-    flex: 1 1 300px;
-    background: var(--card-bg);
-    border-radius:12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    padding:20px;
-    min-width:280px;
-    max-width:30%;
-    transition: transform 0.3s, background 0.3s, color 0.3s;
-  }
-
-  body.dark section { background: var(--dark-card); color: var(--dark-text); }
-
-  section:hover { transform: translateY(-5px); }
-
-  section h2 { margin-top:0; }
-
-  select, input[type=text], textarea {
-    width: 100%; padding:10px; margin-bottom:10px; border-radius:8px; border:2px solid #4dd0e1; font-size:16px;
-  }
-
-  select:focus, input:focus, textarea:focus { outline:none; border-color: var(--primary); }
-
-  button {
-    background: var(--primary);
-    color:white;
-    border:none;
-    padding:10px 20px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
-    transition: transform 0.2s, background 0.3s;
-  }
-
-  button:hover { background:#007c91; transform: scale(1.05); }
-
-  ul { list-style:none; padding:0; max-height:200px; overflow-y:auto; }
-
-  li { padding:10px; border-bottom:1px solid #ddd; cursor:pointer; transition: background 0.3s; }
-  li:hover { background: #b2ebf2; }
-
-  .overlay, .popup { display:none; }
-  .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index:900; }
-  .popup { position: fixed; top:50%; left:50%; transform: translate(-50%,-50%);
-    background:white; padding:20px; border-radius:12px; z-index:1000; width:90%; max-width:400px;
-    box-shadow:0 6px 20px rgba(0,0,0,0.3);
-    text-align:center;
-  }
-
-  body.dark .popup { background: var(--dark-card); color: var(--dark-text); }
-
-  /* Charts container */
-  #charts { width:90%; margin:20px auto; display:flex; flex-wrap:wrap; justify-content:center; gap:30px; }
-  canvas { background:white; border-radius:12px; padding:15px; box-shadow:0 4px 15px rgba(0,0,0,0.15); }
-
+body {margin:0;font-family:'Raleway',sans-serif;background:#f4f7f6;color:#333;}
+header,footer{background:#006064;color:white;text-align:center;padding:20px;}
+header h1{margin:0;font-size:2em;}header p{margin:5px 0;font-size:0.95em;}
+.container{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin:20px;}
+section{flex:1 1 300px;background:white;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);padding:20px;min-width:280px;max-width:30%;position:relative;}
+section h2{margin-top:0;}
+select,input[type="text"]{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:2px solid #4dd0e1;font-size:16px;}
+ul{list-style:none;padding:0;max-height:300px;overflow-y:auto;}
+li{padding:10px;border-bottom:1px solid #ddd;cursor:pointer;transition:0.3s;display:flex;justify-content:space-between;align-items:center;}
+li:hover{background:#b2ebf2;}
+button{background:#00acc1;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;transition:0.2s;}
+button:hover{background:#007c91;transform:scale(1.05);}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:900;}
+.popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+background:white;padding:20px;border-radius:10px;z-index:1000;box-shadow:0 4px 15px rgba(0,0,0,0.3);text-align:center;width:90%;max-width:400px;}
+.favorites{margin-left:10px;color:#007c91;cursor:pointer;}
+#charts{width:100%;max-width:1200px;margin:20px auto;text-align:center;}
+canvas{background:white;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
 </style>
 </head>
-
 <body>
+
 <header>
-  <h1>Nobel Prize Explorer • Ultimate Edition</h1>
-  <button class="toggle-mode" onclick="toggleMode()">🌙 Dark/Light Mode</button>
+<h1>ULTIMATE Nobel Explorer</h1>
+<p>Physics, Chemistry, Medicine, Literature, Peace, Economics | 1901 - 2024</p>
 </header>
 
-<div class="container">
-  <section>
-    <h2 style="color:var(--primary)">Physics</h2>
-    <select id="physics" onchange="showList(this.value,'physics')"><option value="">Select year</option></select>
-    <ul id="physicsList"></ul>
-  </section>
-
-  <section>
-    <h2 style="color:#7b1fa2">Chemistry</h2>
-    <select id="chemistry" onchange="showList(this.value,'chemistry')"><option value="">Select year</option></select>
-    <ul id="chemistryList"></ul>
-  </section>
-
-  <section>
-    <h2 style="color:#c2185b">Medicine</h2>
-    <select id="medicine" onchange="showList(this.value,'medicine')"><option value="">Select year</option></select>
-    <ul id="medicineList"></ul>
-  </section>
-
-  <section>
-    <h2 style="color:#f57c00">Literature</h2>
-    <select id="literature" onchange="showList(this.value,'literature')"><option value="">Select year</option></select>
-    <ul id="literatureList"></ul>
-  </section>
-
-  <section>
-    <h2 style="color:#388e3c">Peace</h2>
-    <select id="peace" onchange="showList(this.value,'peace')"><option value="">Select year</option></select>
-    <ul id="peaceList"></ul>
-  </section>
-
-  <section>
-    <h2 style="color:#455a64">Economics</h2>
-    <select id="economics" onchange="showList(this.value,'economics')"><option value="">Select year</option></select>
-    <ul id="economicsList"></ul>
-  </section>
+<div style="text-align:center;margin:10px 0;">
+<input type="text" id="globalSearch" placeholder="Search winner by name, year, or category..." style="width:90%;max-width:600px;">
 </div>
+
+<div class="container" id="categoriesContainer"></div>
+
+<h2 style="text-align:center;">Favorites ⭐</h2>
+<ul id="favoritesList" style="max-width:600px;margin:0 auto;"></ul>
+<button onclick="exportFavorites()">Download Favorites CSV</button>
 
 <div id="charts">
-  <canvas id="categoryChart" width="400" height="250"></canvas>
-  <canvas id="winnersChart" width="400" height="250"></canvas>
+<h2>Category Trends 📊</h2>
+<canvas id="trendChart" width="1000" height="400"></canvas>
 </div>
+
+<footer>
+&copy; 2026 Ultimate Nobel Explorer | Taezeem Class 8th Rose
+</footer>
 
 <div class="overlay"></div>
 <div class="popup">
-  <h3 id="popupName"></h3>
-  <p><strong>Year:</strong> <span id="popupYear"></span></p>
-  <p><strong>Work:</strong> <span id="popupWork"></span></p>
-  <button onclick="closePopup()">Close</button>
+<h3 id="popupName"></h3>
+<p><strong>Year:</strong> <span id="popupYear"></span></p>
+<p><strong>Category:</strong> <span id="popupCategory"></span></p>
+<p><strong>Work:</strong> <span id="popupWork"></span></p>
+<button onclick="speakMotivation()">🔊 Listen</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const data = { physics:{}, chemistry:{}, medicine:{}, literature:{}, peace:{}, economics:{} };
-let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+// ===== DATA & FAVORITES =====
+const categories=['physics','chemistry','medicine','literature','peace','economics'];
+const data={ physics:{}, chemistry:{}, medicine:{}, literature:{}, peace:{}, economics:{} };
+let favorites=JSON.parse(localStorage.getItem('nobelFavorites'))||[];
 
+// ===== FETCH API =====
 async function fetchNobelData(){
-  const res = await fetch("https://api.nobelprize.org/2.1/nobelPrizes?limit=1000");
-  const json = await res.json();
-  json.nobelPrizes.forEach(p=>{
-    let cat = p.category.en.toLowerCase();
-    if(cat==='economic sciences') cat='economics';
-    if(cat==='physiology or medicine') cat='medicine';
-    if(!data[cat]) return;
-    const year = p.awardYear;
-    if(!data[cat][year]) data[cat][year]=[];
-    p.laureates?.forEach(l=>{
+  const res=await fetch("https://api.nobelprize.org/2.1/nobelPrizes?limit=1000");
+  const json=await res.json();
+  json.nobelPrizes.forEach(prize=>{
+    let cat=prize.category.en.toLowerCase();
+    if(cat==='economic sciences')cat='economics';
+    if(cat==='physiology or medicine')cat='medicine';
+    if(!data[cat])return;
+    const year=prize.awardYear;
+    if(!data[cat][year])data[cat][year]=[];
+    prize.laureates?.forEach(l=>{
       data[cat][year].push({
         name:l.knownName?.en||l.fullName?.en||`${l.firstName?.en||''} ${l.surname?.en||''}`.trim(),
-        work:l.motivation?.en||'No description'
+        work:l.motivation?.en||"No description",
+        year, category:cat
       });
     });
   });
-  populateAll();
-  renderCharts();
+  buildSections();
+  populateFavorites();
+  buildChart();
 }
 
-function populateDropdown(category){
-  const select = document.getElementById(category);
-  const years = Object.keys(data[category]).sort((a,b)=>b-a);
-  select.innerHTML='<option value="">Select year</option>';
-  years.forEach(y=>{
-    const opt=document.createElement('option'); opt.value=y; opt.textContent=y; select.appendChild(opt);
+// ===== BUILD SECTIONS =====
+function buildSections(){
+  const container=document.getElementById('categoriesContainer');
+  container.innerHTML='';
+  categories.forEach(cat=>{
+    const sec=document.createElement('section');
+    sec.innerHTML=`<h2>${cat.charAt(0).toUpperCase()+cat.slice(1)}</h2>
+      <select onchange="showList(this.value,'${cat}')"><option value="">Select year</option></select>
+      <ul id="${cat}List"></ul>`;
+    container.appendChild(sec);
+    const select=sec.querySelector('select');
+    Object.keys(data[cat]).sort((a,b)=>b-a).forEach(year=>{
+      const opt=document.createElement('option'); opt.value=year; opt.textContent=year; select.appendChild(opt);
+    });
   });
 }
 
-function populateAll(){ ['physics','chemistry','medicine','literature','peace','economics'].forEach(populateDropdown); }
-
+// ===== SHOW LIST =====
 function showList(year,category){
-  const list=document.getElementById(category+'List'); list.innerHTML='';
+  const list=document.getElementById(category+'List');
+  list.innerHTML='';
   if(data[category][year]){
     data[category][year].forEach(item=>{
-      const li=document.createElement('li'); li.textContent=item.name;
-      li.onclick=()=>showPopup(item.name,year,item.work);
+      const li=document.createElement('li');
+      li.innerHTML=`<span>${item.name}</span><span class="favorites" onclick="addFavorite(event,'${item.name}','${item.year}','${item.category}','${item.work}')">⭐</span>`;
+      li.onclick=()=>showPopup(item);
       list.appendChild(li);
     });
   }
 }
 
-const overlay=document.querySelector('.overlay'); const popup=document.querySelector('.popup');
-function showPopup(name,year,work){ document.getElementById('popupName').textContent=name; document.getElementById('popupYear').textContent=year; document.getElementById('popupWork').textContent=work; overlay.style.display='block'; popup.style.display='block'; }
-function closePopup(){ overlay.style.display='none'; popup.style.display='none'; }
+// ===== POPUP =====
+const overlay=document.querySelector('.overlay');
+const popup=document.querySelector('.popup');
+function showPopup(item){
+  document.getElementById('popupName').textContent=item.name;
+  document.getElementById('popupYear').textContent=item.year;
+  document.getElementById('popupCategory').textContent=item.category;
+  document.getElementById('popupWork').textContent=item.work;
+  overlay.style.display='block'; popup.style.display='block';
+}
+overlay.onclick=()=>{overlay.style.display='none';popup.style.display='none';}
 
-overlay.onclick=closePopup;
-
-function toggleMode(){ document.body.classList.toggle('dark'); }
-
-function renderCharts(){
-  const categories = Object.keys(data);
-  const catCounts = categories.map(c=>Object.values(data[c]).reduce((a,b)=>a+b.length,0));
-  new Chart(document.getElementById('categoryChart'), {
-    type:'bar',
-    data:{
-      labels:categories,
-      datasets:[{label:'Total Winners',data:catCounts,backgroundColor:['#00acc1','#7b1fa2','#c2185b','#f57c00','#388e3c','#455a64']}]
-    },
-    options:{ responsive:true, plugins:{legend:{display:false}} }
-  });
-
-  // Top winners per year
-  let yearCounts={};
-  categories.forEach(c=>{ Object.keys(data[c]).forEach(y=>{ yearCounts[y]=(yearCounts[y]||0)+data[c][y].length; }); });
-  const years = Object.keys(yearCounts).sort();
-  const counts = years.map(y=>yearCounts[y]);
-  new Chart(document.getElementById('winnersChart'), {
-    type:'line',
-    data:{ labels:years, datasets:[{label:'Winners per Year',data:counts,borderColor:'#ff5722',backgroundColor:'rgba(255,87,34,0.2)',fill:true,tension:0.4}] },
-    options:{ responsive:true }
+// ===== FAVORITES =====
+function addFavorite(e,name,year,category,work){
+  e.stopPropagation();
+  if(!favorites.find(f=>f.name===name&&f.year===year)){
+    favorites.push({name,year,category,work});
+    localStorage.setItem('nobelFavorites',JSON.stringify(favorites));
+    populateFavorites();
+  }
+}
+function populateFavorites(){
+  const list=document.getElementById('favoritesList');
+  list.innerHTML='';
+  favorites.forEach(f=>{
+    const li=document.createElement('li');
+    li.textContent=`${f.name} (${f.year}, ${f.category})`;
+    li.onclick=()=>showPopup(f);
+    list.appendChild(li);
   });
 }
+function exportFavorites(){
+  if(!favorites.length)return alert("No favorites saved!");
+  let csv='Name,Year,Category,Work\n';
+  favorites.forEach(f=>{csv+=`"${f.name}","${f.year}","${f.category}","${f.work.replace(/"/g,'""')}"\n`;});
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='nobel_favorites.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
 
-fetchNobelData();
+// ===== SEARCH =====
+document.getElementById('globalSearch').addEventListener('input',e=>{
+  const query=e.target.value.toLowerCase();
+  categories.forEach(cat=>{
+    const list=document.getElementById(cat+'List'); list.innerHTML='';
+    Object.values(data[cat]).flat().filter(item=>
+      item.name.toLowerCase().includes(query)||
+      item.year.includes(query)||
+      item.category.toLowerCase().includes(query)
+    ).forEach(item=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<span>${item.name} (${item.year})</span><span class="favorites" onclick="addFavorite(event,'${item.name}','${item.year}','${item.category}','${item.work}')">⭐</span>`;
+      li.onclick=()=>showPopup(item);
+      list.appendChild(li);
+    });
+  });
+});
+
+// ===== VOICE READ =====
+function speakMotivation(){
+  const text=document.getElementById('popupWork').textContent;
+  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+}
+
+// ===== CHART =====
+function buildChart(){
+  const ctx=document.getElementById('trendChart').getContext('2d');
+  const years=[...new Set(Object.values(data).flatMap(cat=>Object.keys(cat)))].sort();
+  const datasets=categories.map(cat=>{
+    return {
+      label:cat.charAt(0).toUpperCase()+cat.slice(1),
+      data:years.map(y=>data[cat][y]?data[cat][y].length:0),
+      borderWidth:2,
+      fill:false
+    };
+  });
+  if(window.trendChart)window.trendChart.destroy();
+  window.trendChart=new Chart(ctx,{type:'line',data:{labels:years,datasets:datasets},options:{responsive:true,plugins:{legend:{position:'top'}}}});
+}
+
+// ===== LOAD CHARTJS =====
+const script=document.createElement('script');
+script.src="https://cdn.jsdelivr.net/npm/chart.js";
+script.onload=fetchNobelData;
+document.head.appendChild(script);
+
 </script>
 </body>
 </html>
